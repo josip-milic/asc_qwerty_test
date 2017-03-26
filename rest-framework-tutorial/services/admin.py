@@ -4,4 +4,5 @@ from .models import Event
 
 class EventAdmin(admin.ModelAdmin):
 	list_display = ('title','date', 'description')
-	admin.site.register(Event, EventAdmin)
+	
+admin.site.register(Event, EventAdmin)
