@@ -15,7 +15,22 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+admin.autodiscover()
 
-urlpatterns = [
-    url(r'^admin/', admin.site.urls),
-]
+from rest_framework import routers
+from services.views import MessageViewSet
+
+router = routers.DefaultRouter(trailing_slash=False)
+router.register(r'message', MessageViewSet)
+
+urlpatterns = patterns('',
+	# Examples:
+	url(r'^$', 'views.home', name='home'),
+	# url(r'^$', 'openshift.views.home', name='home'),
+	# url(r'^blog/', include('blog.urls')),
+
+	url(r'^admin/', include(admin.site.urls)),
+
+	url(r'^api/',include(router.urls)),
+	url(r'^api-auth/',include('rest_framework.urls', namespace='rest_framework')),
+)
