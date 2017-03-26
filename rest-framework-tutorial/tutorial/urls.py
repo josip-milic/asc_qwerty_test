@@ -13,7 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 from django.contrib import admin
 admin.autodiscover()
 
@@ -23,7 +23,7 @@ from services.views import EventViewSet
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'event', EventViewSet)
 
-urlpatterns = patterns('',
+urlpatterns = [
 	# Examples:
 	url(r'^$', 'views.home', name='home'),
 	# url(r'^$', 'openshift.views.home', name='home'),
@@ -33,4 +33,4 @@ urlpatterns = patterns('',
 
 	url(r'^api/',include(router.urls)),
 	url(r'^api-auth/',include('rest_framework.urls', namespace='rest_framework')),
-)
+]
