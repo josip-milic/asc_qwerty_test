@@ -25,7 +25,7 @@ router.register(r'event', EventViewSet)
 
 urlpatterns = [
 	# Examples:
-	url(r'^$', 'views.home', name='home'),
+	#url(r'^$', 'views.home', name='home'),
 	# url(r'^$', 'openshift.views.home', name='home'),
 	# url(r'^blog/', include('blog.urls')),
 
