@@ -2,6 +2,7 @@ from django.shortcuts import render
 from .models import Event
 from rest_framework import viewsets
 from .serializer import EventSerializer
+from .serializer import EventDetailSerializer
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
