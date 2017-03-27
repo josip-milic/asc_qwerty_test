@@ -68,7 +68,17 @@
 
 <script>
 $(document).ready(function() {
-	console.log('LOADED');
+	var events = [];
+	$.ajax({url: "http://35.158.62.226:8000/api/event", 
+		contentType:"application/json",
+		dataType: "json",
+		success: function(result){
+			events = JSON.parse(result);
+			console.log(events);
+		}
+	});
+	
+	
 });
 
 var markerOpacity = markerOpacityIncrement = 0.05,
