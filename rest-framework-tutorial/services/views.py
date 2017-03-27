@@ -44,12 +44,12 @@ class EventDetail(APIView):
 
     def get(self, request, pk, format=None):
         event = self.get_object(pk)
-        event = EventSerializer(event)
+        event = EventDetailSerializer(event)
         return Response(event.data)
 
     def put(self, request, pk, format=None):
         event = self.get_object(pk)
-        serializer = EventSerializer(event, data=request.DATA)
+        serializer = EventDetailSerializer(event, data=request.DATA)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
