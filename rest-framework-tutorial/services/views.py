@@ -8,15 +8,18 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
+from rest_framework.decorators import api_view
+
 class EventViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
 	
-@api_view(methods = ['GET'], permission_classes=[AllowAny])
+
 class EventList(APIView):
     """
     List all event, or create a new event.
     """
+    @api_view(methods = ['GET'], permission_classes=[AllowAny])
     def get(self, request, format=None):
         events = Event.objects.all()
         serializer = EventSerializer(events, many=True)
@@ -34,7 +37,7 @@ class EventList(APIView):
         event.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)	
 
-@api_view(methods = ['GET'], permission_classes=[AllowAny])
+
 class EventDetail(APIView):
     """
     Retrieve, update or delete a event instance.
@@ -45,6 +48,7 @@ class EventDetail(APIView):
         except Event.DoesNotExist:
             raise Http404
 
+    @api_view(methods = ['GET'], permission_classes=[AllowAny])
     def get(self, request, pk, format=None):
         event = self.get_object(pk)
         event = EventDetailSerializer(event)
