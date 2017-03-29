@@ -19,7 +19,7 @@ class EventList(APIView):
     """
     List all event, or create a new event.
     """
-    @api_view(methods = ['GET'], permission_classes=[AllowAny])
+    @api_view(methods = ['GET'])
     def get(self, request, format=None):
         events = Event.objects.all()
         serializer = EventSerializer(events, many=True)
@@ -48,7 +48,7 @@ class EventDetail(APIView):
         except Event.DoesNotExist:
             raise Http404
 
-    @api_view(methods = ['GET'], permission_classes=[AllowAny])
+    @api_view(methods = ['GET'])
     def get(self, request, pk, format=None):
         event = self.get_object(pk)
         event = EventDetailSerializer(event)
