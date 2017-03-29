@@ -12,6 +12,7 @@ class EventViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
 	
+@api_view(methods = ['GET'], permission_classes=[AllowAny])
 class EventList(APIView):
     """
     List all event, or create a new event.
@@ -33,6 +34,7 @@ class EventList(APIView):
         event.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)	
 
+@api_view(methods = ['GET'], permission_classes=[AllowAny])
 class EventDetail(APIView):
     """
     Retrieve, update or delete a event instance.
