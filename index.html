@@ -69,8 +69,8 @@
 <script>
 $(document).ready(function() {
 	var events = [];
-	$.ajax({url: "http://ec2-35-158-62-226.eu-central-1.compute.amazonaws.com:8000/api/event", 
-		contentType:"application/json",
+	$.ajax({url: "http://35.158.62.226:8000/api/event", 
+		contentType:"text/plain",
 		dataType: "json",
 		success: function(result){
 			events = JSON.parse(result);
