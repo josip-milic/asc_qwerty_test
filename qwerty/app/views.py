@@ -5,11 +5,10 @@ from .serializer import EventSerializer
 from django.template import loader
 
 def index(request):
-    a = 2
     template = loader.get_template('app/index.html')
     return HttpResponse(template.render({}, request))
     
- def get_events():
+def get_events():
     events = Event.objects.all()
     serializer = EventSerializer(events, many=True)
     return Response(serializer.data)
