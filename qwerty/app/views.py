@@ -11,6 +11,6 @@ def index(request):
     
 def get_events(request):
     events = Event.objects.all()
-    data = serializers.serialize("json", [events])
+    data = serializers.serialize("json", events, many=True)
     return HttpResponse(data, content_type='application/json')
     
