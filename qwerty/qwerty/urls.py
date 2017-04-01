@@ -19,5 +19,4 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^app/', include('app.urls')),
     url(r'^admin/', admin.site.urls),
-    url(r'^ajax/get_events/$', views.get_events, name='get_events'),
 ]
