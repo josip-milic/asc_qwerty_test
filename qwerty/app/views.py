@@ -5,6 +5,7 @@ from .serializer import EventSerializer
 from django.template import loader
 
 def index(request):
+    a = 2
     template = loader.get_template('app/index.html')
     return HttpResponse(template.render({}, request))
     
