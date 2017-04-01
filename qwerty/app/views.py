@@ -1,9 +1,15 @@
 from django.http import HttpResponse
 from models import Event
 from django.shortcuts import render
+from .serializer import EventSerializer
+from django.template import loader
 
 def index(request):
-    all_entries = Event.objects.all()
-    print(all_entries)
-    return render(request, './index.html', {'test': 'aaa'})
-    return HttpResponse("Hello, world.")
+    template = loader.get_template('app/index.html')
+    return HttpResponse(template.render({}, request))
+    
+ def get_events():
+    events = Event.objects.all()
+    serializer = EventSerializer(events, many=True)
+    return Response(serializer.data)
+    
