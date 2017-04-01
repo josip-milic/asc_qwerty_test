@@ -8,7 +8,7 @@ def index(request):
     template = loader.get_template('app/index.html')
     return HttpResponse(template.render({}, request))
     
-def get_events():
+def get_events(request):
     events = Event.objects.all()
     serializer = EventSerializer(events, many=True)
     return Response(serializer.data)
