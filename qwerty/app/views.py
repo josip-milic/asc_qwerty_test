@@ -3,6 +3,7 @@ from models import Event
 from django.shortcuts import render
 from .serializer import EventSerializer
 from django.template import loader
+from django.http import JsonResponse
 
 def index(request):
     template = loader.get_template('app/index.html')
@@ -10,6 +11,5 @@ def index(request):
     
 def get_events(request):
     events = Event.objects.all()
-    serializer = EventSerializer(events, many=True)
-    return Response(serializer.data)
+    return JsonResponse(events)
     
