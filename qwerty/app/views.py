@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from models import Event
 from django.shortcuts import render
-from .serializer import EventSerializer
+from django.core import serializers
 from django.template import loader
 from django.http import JsonResponse
 
@@ -11,5 +11,6 @@ def index(request):
     
 def get_events(request):
     events = Event.objects.all()
-    return JsonResponse(events)
+    data = serializers.serialize("json", events)
+    return data
     
