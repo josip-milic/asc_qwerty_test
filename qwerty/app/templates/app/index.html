@@ -48,8 +48,19 @@
             .title {
                 font-size: 84px;
             }
-
-
+            
+            .circle {
+              width: 100px;
+              height: 100px;
+              border-radius: 50%;
+              font-size: 70px;
+              line-height: 100px;
+              text-align: center;
+              background: #8AEAB4;
+              box-shadow: 5px 5px 2px #888888;
+              cursor: pointer;
+            }
+           
 
             #map {
               height: 100%;
@@ -60,13 +71,125 @@
     <body>
         <div class="flex-center position-ref full-height">
           <div id="map"></div>
+          <div style="position:absolute;  z-index: 5; right:10px">
+            <div id="add-event-btn" class="circle" style="color:black" >
+            +
+            </div>
+          </div>
+          <div id="add-event-panel" class="w3-container" style="border-radius: 1%; box-shadow: 5px 5px 2px #888888; display:none; position:absolute;  z-index: 5; background-color:white; width:20%; height:80%; right:10px">
+            <form id="add-event-form" class="w3-container">
+              <p>
+                  <label>Naslov</label>
+                  <input type="text" id="add-event-form-title" name="add-event-form-title">
+              </p>
+              <p>
+                  <label>Datum</label>
+                  <input type="text" id="add-event-form-date" name="add-event-form-date">
+              </p>
+              <p>
+                  <label>Lokacija</label>
+                  <input  type="text" placeholder="latituda" id="add-event-form-lat" name="add-event-form-lat">
+                  <input  type="text" placeholder="longituda" id="add-event-form-lng" name="add-event-form-lng">
+              </p>
+              <p>
+                  <label>Opis</label>
+                  <textarea id="add-event-form-description" name="add-event-form-description"></textarea>
+              </p>
+              <p>
+                  <label>Marker</label>
+                  <select type="text" id="add-event-form-marker" name="add-event-form-marker">
+                  <option value="cycling">Bicikl</option>
+                  <option value="arts">Umjetnost</option>
+                  <option value="golfer">Golfer</option>
+                  <option value="restaurant">Ručak</option>
+                  </select>
+              </p>
+              <button id="add-event-submit">Dodaj</button>
+
+            </form>
+          </div>
         </div>
+
     </body>
 </html>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="http://malsup.github.com/jquery.form.js"></script> 
+<script src="/static/app/moment.min.js"></script>
 
 <script>
+$(document).ready(function() {
+    $('#add-event-btn').on('click',function() {
+        $(this).hide();
+        $('#add-event-panel').show();
+    });
+    
+    $('#add-event-submit').on('click',function() {
+        event.preventDefault();
+        $
+        $("#add-event-form").ajaxForm({url: "/app/ajax/post_event/", type: 'post', error:function(msg) {console.log(msg)}});
+        
+        var title = $('#add-event-form-title').val();
+        var date = $('#add-event-form-date').val();
+        var location_lat = $('#add-event-form-lat').val();
+        var location_lng = $('#add-event-form-lng').val();
+        var description = $('#add-event-form-description').val();
+        var markerType = $('#add-event-form-marker').val();
+        
+        var id = -1;
+        $.ajax({
+        url: "/app/ajax/post_event/",
+        type: 'post',
+        async:false,
+        data: {
+        title:title,
+        date:date,
+        location_lat:location_lat,
+        location_lng:location_lng,
+        description:description,
+        markerType:markerType,
+        csrfmiddlewaretoken: '{{ csrf_token }}'
+        },
+        success: function(result){
+            id = result;
+        }
+        });
+        
+        
+        
+        
+        
+        var latLng = new google.maps.LatLng(location_lat,location_lng);
+        var image = 'https://maps.gstatic.com/mapfiles/ms2/micons/'+markerType+'.png';
+        var marker = new google.maps.Marker({
+            position: latLng,
+            id: id,
+            map: map,
+            title: title,
+            icon: image,
+        });
+        marker.setOpacity(0);
+        
+        google.maps.event.addListener(marker,'click', (function(marker,content,infowindow){
+        
+          return function() {
+            console.log('test');
+            content = getEventDetails(marker.id,marker.title);
+            infowindow.setContent(content);
+            infowindow.open(map,marker);
+          };
+      })(marker,marker.title + marker.infoWindow,infowindow));
+      
+     setTimeout(function() {
+      fadeInMarkers([marker]);
+    }, 300);
+        
+    
+        
+    });
+});
+
+
 var markerOpacity = markerOpacityIncrement = 0.05,
     markers = [];
 var fadeInMarkers = function(markers) {
@@ -103,6 +226,8 @@ var fadeInMarkers = function(markers) {
 
     infowindow = new google.maps.InfoWindow();
     google.maps.event.addListener(map, 'click', function() {
+      $('#add-event-panel').hide();
+      $('#add-event-btn').show();
       infowindow.close();
     });
     
@@ -114,10 +239,27 @@ var fadeInMarkers = function(markers) {
      putMarkers();
      }
     );
-    
-    
-    
-    
+
+  }
+  
+  function getEventDetails(id,title) {
+    console.log('test');
+    $.ajax({
+        url: "/app/ajax/get_event/"+id, 
+        async: false,
+        success: function(result){
+            event = JSON.parse(result)[0].fields;
+            date = moment(event.date).format('D.M.YYYY HH:mm');
+            content = '<div align="center"><b>' 
+                + title 
+                + '</b><br>Vrijeme: '
+                +date
+                +'<br><br>' 
+                + event.description
+            +'</div>';
+        }
+    });
+    return content;
 
   }
   
@@ -156,55 +298,11 @@ function putMarkers() {
     } );
     */
     
-    
-	
-	
-
-
-
-    var objs = {
-    "employees":[
-        {"title":"Test bicikliranje", "lat":"45.796675", "lng":"15.911854", "icon":"cycling.png"},
-        {"title":"Test bicikliranje 2", "lat":"45.786675", "lng":"15.711854", "icon":"cycling.png"},
-        {"title":"Test kampiranje", "lat":"45.896675", "lng":"15.911854", "icon":"campfire.png"},
-        {"title":"Test plivanje", "lat":"45.796675", "lng":"15.811854", "icon":"swimming.png"}
-      ]
-    };
-
-    var contentString = '<div id="content">'+
-    '<div id="siteNotice">'+
-    '</div>'+
-    '<h1 id="firstHeading" class="firstHeading">Uluru</h1>'+
-    '<div id="bodyContent">'+
-    '<p><b>Uluru</b>, also referred to as <b>Ayers Rock</b>, is a large ' +
-    'sandstone rock formation in the southern part of the '+
-    'Northern Territory, central Australia. It lies 335&#160;km (208&#160;mi) '+
-    'south west of the nearest large town, Alice Springs; 450&#160;km '+
-    '(280&#160;mi) by road. Kata Tjuta and Uluru are the two major '+
-    'features of the Uluru - Kata Tjuta National Park. Uluru is '+
-    'sacred to the Pitjantjatjara and Yankunytjatjara, the '+
-    'Aboriginal people of the area. It has many springs, waterholes, '+
-    'rock caves and ancient paintings. Uluru is listed as a World '+
-    'Heritage Site.</p>'+
-    '<p>Attribution: Uluru, <a href="https://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">'+
-    'https://en.wikipedia.org/w/index.php?title=Uluru</a> '+
-    '(last visited June 22, 2009).</p>'+
-    '<img style="width:80%" src="https://3.bp.blogspot.com/-W__wiaHUjwI/Vt3Grd8df0I/AAAAAAAAA78/7xqUNj8ujtY/s1600/image02.png"></img>'+
-    '</div>'+
-    '</div>';
-
-    
-    var infowindow = new google.maps.InfoWindow({
-      content: contentString
-    });
-    
-    console.log('aa');
-
+   
 
     for (var i = 0; i < events.length; i++) {
       var id = events[i].pk;
       var event = events[i].fields;
-      console.log(event.location_lat);
       var latLng = new google.maps.LatLng(event.location_lat,event.location_lng);
       var image = 'https://maps.gstatic.com/mapfiles/ms2/micons/'+event.marker_type+'.png';
       var marker = new google.maps.Marker({
@@ -220,19 +318,12 @@ function putMarkers() {
       markers.push(marker);
 
       google.maps.event.addListener(marker,'click', (function(marker,content,infowindow){
+        
           return function() {
-                var events = [];
-                $.ajax({
-                    url: "/app/ajax/get_event/"+marker.id, 
-                    async: false,
-                    success: function(result){
-                        event = JSON.parse(result)[0].fields;
-                        content = '<b>' + marker.title + '</b><br>' + event.description;
-                        console.log(event);
-                    }
-                });
-              infowindow.setContent(content);
-              infowindow.open(map,marker);
+            console.log('test');
+            content = getEventDetails(marker.id,marker.title);
+            infowindow.setContent(content);
+            infowindow.open(map,marker);
           };
       })(marker,marker.title + marker.infoWindow,infowindow));
 
@@ -250,3 +341,4 @@ function putMarkers() {
 <script async defer
 src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA2wQ0IYfyt1FxPVHeb2yVeIx4ilfjICOA&callback=initMap">
 </script>
+
