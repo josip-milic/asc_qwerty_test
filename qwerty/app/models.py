@@ -14,7 +14,7 @@ class Event(models.Model):
 
 
     def __unicode__(self):
-        return self.title
+        return u'%s' % self.title
         
     def __str__(self):
         return "{} | {} | {}...".format(self.title, self.date, self.description[:20])
