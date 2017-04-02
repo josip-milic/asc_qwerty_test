@@ -184,6 +184,7 @@ var fadeInMarkers = function(markers) {
 
     for (var i = 0; i < events.length; i++) {
       var event = events[i];
+      console.log(event.location_lat);
       var latLng = new google.maps.LatLng(event.location_lat,event.location_lng);
       var image = 'https://maps.gstatic.com/mapfiles/ms2/micons/'+event.marker_type;
       var marker = new google.maps.Marker({
