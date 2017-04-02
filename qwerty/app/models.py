@@ -17,4 +17,4 @@ class Event(models.Model):
         return u'%s' % self.title
         
     def __str__(self):
-        return "{} | {} | {}...".format(self.title, self.date, self.description[:20])
+        return ("{} | {} | {}...".format(self.title, self.date, self.description[:20])).encode('ascii', errors='replace')
