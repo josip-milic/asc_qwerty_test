@@ -72,7 +72,8 @@ $(document).ready(function() {
 	$.ajax({
         url: "/app/ajax/get_events", 
 		success: function(result){
-			console.log(result);
+            events = JSON.parse(result);
+			console.log(events);
 		}
 	});
 	
