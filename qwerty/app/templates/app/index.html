@@ -10,14 +10,14 @@
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
         <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/cupertino/jquery-ui.min.css"/ >
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
         <!-- Styles -->
         <style>
             html, body {
                 background-color: #fff;
                 color: #636b6f;
-                font-family: 'Raleway', sans-serif;
-                font-weight: 100;
+               
                 height: 100vh;
                 margin: 0;
             }
@@ -78,36 +78,38 @@
             </div>
           </div>
           <div id="add-event-panel" class="w3-container" style="border-radius: 1%; box-shadow: 5px 5px 2px #888888; display:none; position:absolute;  z-index: 5; background-color:white; width:20%; height:80%; right:10px">
-            <form id="add-event-form" class="w3-container">
-              <p>
-                  <label>Naslov</label>
-                  <input type="text" id="add-event-form-title" name="add-event-form-title">
-              </p>
-              <p>
-                  <label>Datum</label>
-                  <input type="text" id="add-event-form-date" name="add-event-form-date">
-              </p>
-              <p>
-                  <label>Lokacija</label>
-                  <input  type="text" placeholder="latituda" id="add-event-form-lat" name="add-event-form-lat">
-                  <input  type="text" placeholder="longituda" id="add-event-form-lng" name="add-event-form-lng">
-              </p>
-              <p>
-                  <label>Opis</label>
-                  <textarea id="add-event-form-description" name="add-event-form-description"></textarea>
-              </p>
-              <p>
-                  <label>Marker</label>
-                  <select type="text" id="add-event-form-marker" name="add-event-form-marker">
-                  <option value="cycling">Bicikl</option>
-                  <option value="arts">Umjetnost</option>
-                  <option value="golfer">Golfer</option>
-                  <option value="restaurant">Ručak</option>
-                  </select>
-              </p>
-              <button id="add-event-submit">Dodaj</button>
+            <div>
+                <form id="add-event-form" class="w3-container" style="padding:20px">
+                  <p>
+                      <label>Naslov</label>
+                      <input class="form-control" type="text" id="add-event-form-title" name="add-event-form-title">
+                  </p>
+                  <p>
+                      <label>Datum</label>
+                      <input class="form-control" type="text" id="add-event-form-date" name="add-event-form-date">
+                  </p>
+                  <p>
+                      <label>Lokacija</label>
+                      <input class="form-control"  type="text" placeholder="latituda" id="add-event-form-lat" name="add-event-form-lat">
+                      <input class="form-control"  type="text" placeholder="longituda" id="add-event-form-lng" name="add-event-form-lng">
+                  </p>
+                  <p>
+                      <label>Opis</label>
+                      <textarea class="form-control" id="add-event-form-description" name="add-event-form-description"></textarea>
+                  </p>
+                  <p>
+                      <label>Marker</label>
+                      <select class="form-control" type="text" id="add-event-form-marker" name="add-event-form-marker">
+                      <option value="cycling">Bicikl</option>
+                      <option value="arts">Umjetnost</option>
+                      <option value="golfer">Golfer</option>
+                      <option value="restaurant">Ručak</option>
+                      </select>
+                  </p>
+                  <button id="add-event-submit" class="btn btn-primary">Dodaj</button>
 
-            </form>
+                </form>
+            </div>
           </div>
         </div>
 
