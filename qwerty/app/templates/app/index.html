@@ -106,9 +106,26 @@ var fadeInMarkers = function(markers) {
       infowindow.close();
     });
     
+    /*google.maps.event.addListener(map, 'dragend', function(){
+      putMarkers();
+    });*/
+    
+    google.maps.event.addListenerOnce(map, 'idle', function(){
+     putMarkers();
+     }
+    );
+    
+    
+    
+    
+
+  }
+  
+function putMarkers() {
     var events = [];
 	$.ajax({
         url: "/app/ajax/get_events", 
+        async: false,
 		success: function(result){
             events = JSON.parse(result);
 			console.log(events);
@@ -180,18 +197,22 @@ var fadeInMarkers = function(markers) {
     var infowindow = new google.maps.InfoWindow({
       content: contentString
     });
+    
+    console.log('aa');
 
 
     for (var i = 0; i < events.length; i++) {
-      var event = events[i];
+      var id = events[i].pk;
+      var event = events[i].fields;
       console.log(event.location_lat);
       var latLng = new google.maps.LatLng(event.location_lat,event.location_lng);
-      var image = 'https://maps.gstatic.com/mapfiles/ms2/micons/'+event.marker_type;
+      var image = 'https://maps.gstatic.com/mapfiles/ms2/micons/'+event.marker_type+'.png';
       var marker = new google.maps.Marker({
         position: latLng,
+        id: id,
         map: map,
         title: event.title,
-        icon: image
+        icon: image,
       });
       marker.setOpacity(0);
 
@@ -200,14 +221,20 @@ var fadeInMarkers = function(markers) {
 
       google.maps.event.addListener(marker,'click', (function(marker,content,infowindow){
           return function() {
-                console.log(marker);
+                var events = [];
+                $.ajax({
+                    url: "/app/ajax/get_event/"+marker.id, 
+                    async: false,
+                    success: function(result){
+                        event = JSON.parse(result)[0].fields;
+                        content = '<b>' + marker.title + '</b><br>' + event.description;
+                        console.log(event);
+                    }
+                });
               infowindow.setContent(content);
               infowindow.open(map,marker);
           };
       })(marker,marker.title + marker.infoWindow,infowindow));
-
-
-
 
     }
 
@@ -217,11 +244,7 @@ var fadeInMarkers = function(markers) {
       fadeInMarkers(markers);
     }, 300);
 
-
-
-
-
-  }
+}
 
 </script>
 <script async defer
