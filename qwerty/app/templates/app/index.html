@@ -67,19 +67,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
 <script>
-$(document).ready(function() {
-	var events = [];
-	$.ajax({
-        url: "/app/ajax/get_events", 
-		success: function(result){
-            events = JSON.parse(result);
-			console.log(events);
-		}
-	});
-	
-	
-});
-
 var markerOpacity = markerOpacityIncrement = 0.05,
     markers = [];
 var fadeInMarkers = function(markers) {
@@ -112,11 +99,21 @@ var fadeInMarkers = function(markers) {
 
 
     });
+    
 
     infowindow = new google.maps.InfoWindow();
     google.maps.event.addListener(map, 'click', function() {
       infowindow.close();
     });
+    
+    var events = [];
+	$.ajax({
+        url: "/app/ajax/get_events", 
+		success: function(result){
+            events = JSON.parse(result);
+			console.log(events);
+		}
+	});
 
     /*
     google.maps.event.addListener(map, 'dragend', function() {
@@ -141,6 +138,8 @@ var fadeInMarkers = function(markers) {
       console.log(lat0,lng0, lat1, lng1);
     } );
     */
+    
+    
 	
 	
 
@@ -177,21 +176,21 @@ var fadeInMarkers = function(markers) {
     '</div>'+
     '</div>';
 
+    
     var infowindow = new google.maps.InfoWindow({
       content: contentString
     });
 
 
-    for (var i = 1; i < objs.employees.length; i++) {
-      var employee = objs.employees[i];
-      var latLng = new google.maps.LatLng(employee.lat,employee.lng);
-      var image = 'https://maps.gstatic.com/mapfiles/ms2/micons/'+employee.icon;
+    for (var i = 0; i < events.length; i++) {
+      var event = events[i];
+      var latLng = new google.maps.LatLng(event.location_lat,event.location_lng);
+      var image = 'https://maps.gstatic.com/mapfiles/ms2/micons/'+event.marker_type;
       var marker = new google.maps.Marker({
         position: latLng,
         map: map,
-        title: employee.title,
-        icon: image,
-        infoWindow: contentString
+        title: event.title,
+        icon: image
       });
       marker.setOpacity(0);
 
@@ -200,6 +199,7 @@ var fadeInMarkers = function(markers) {
 
       google.maps.event.addListener(marker,'click', (function(marker,content,infowindow){
           return function() {
+                console.log(marker);
               infowindow.setContent(content);
               infowindow.open(map,marker);
           };
@@ -217,28 +217,6 @@ var fadeInMarkers = function(markers) {
     }, 300);
 
 
-
-    setTimeout(function() {
-      var employee = objs.employees[0];
-      var latLng = new google.maps.LatLng(employee.lat,employee.lng);
-      var image = 'https://maps.gstatic.com/mapfiles/ms2/micons/'+employee.icon;
-      var marker = new google.maps.Marker({
-        position: latLng,
-        map: map,
-        title: employee.title,
-        icon: image,
-        infoWindow: contentString
-      });
-      marker.setOpacity(0);
-      fadeInMarkers([marker]);
-
-      google.maps.event.addListener(marker,'click', (function(marker,content,infowindow){
-          return function() {
-              infowindow.setContent(content);
-              infowindow.open(map,marker);
-          };
-      })(marker,marker.title + marker.infoWindow,infowindow));
-    }, 3000);
 
 
 
